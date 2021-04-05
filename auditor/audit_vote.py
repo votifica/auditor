@@ -31,8 +31,8 @@ class Commitment:
     right: str
 
 
-def audit_vote(opened_vote: OpenedVote, commitment: Commitment):
-    if opened_vote.left and opened_vote.right:
+def audit_vote(opened_vote: OpenedVote, commitment: Commitment) -> bool:
+    if bool(opened_vote.left) is bool(opened_vote.right):
         return False
 
     if opened_vote.left:
