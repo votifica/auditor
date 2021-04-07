@@ -29,6 +29,26 @@ def right_opened_vote() -> OpenedVote:
         ),
     )
 
+@fixture
+def left_opened_vote_2() -> OpenedVote:
+    return OpenedVote(
+        left=OpenedLeft(
+            key="2ca784881aebaebc63b53bdc1e55422aefba7cb0536ba48c9d9425e4c5a22fb7",
+            data="0-007629B808CD8C5E-085B43",
+        ),
+        middle=1,
+    )
+
+
+@fixture
+def right_opened_vote_2() -> OpenedVote:
+    return OpenedVote(
+        middle=1,
+        right=OpenedRight(
+            key="cd9c6d4d31e512c3b3566660d4214d0a1b95410083c3bbf47c6c1e2918f6b13f",
+            data="0-1",
+        ),
+    )
 
 @fixture
 def opened_vote() -> OpenedVote:
@@ -56,6 +76,14 @@ def commitment() -> Commitment:
         left="e04b0dab3e3dfe11fc7a093429aa9788003623a49dd659b9ce2a22d94d84606a",
         middle=1,
         right="8b6c1b2fc99055bc3125ad885d961803982e1e29778514f48aae9f08e88f877a",
+    )
+
+@fixture
+def commitment_2() -> Commitment:
+    return Commitment(
+        left="e7cb17ba6162fd2ee95ccd0bc57115f7923b787d2de5382fc32cd6da87d2d4ec",
+        middle=1,
+        right="bbb07e948f14697d6d7edaab1743cf408d6e20413aa3a01cb2fdca9092733b62",
     )
 
 

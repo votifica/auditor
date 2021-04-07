@@ -13,6 +13,9 @@ def audit_table(
     if len(opened_votes_table) != len(commitment_table):
         return False
 
+    if len(opened_votes_table) == 0:
+        return True
+
     side = "left" if opened_votes_table[0].left else "right"
     if not all(getattr(vote, side) for vote in opened_votes_table):
         return False

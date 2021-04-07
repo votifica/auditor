@@ -9,13 +9,13 @@ from auditor.audit_table import audit_table, OpenedVoteTable, CommitmentTable
 
 
 @fixture
-def left_opened_vote_table(left_opened_vote: OpenedVote) -> OpenedVoteTable:
-    return [left_opened_vote, left_opened_vote]
+def left_opened_vote_table(left_opened_vote: OpenedVote, left_opened_vote_2: OpenedVote) -> OpenedVoteTable:
+    return [left_opened_vote, left_opened_vote_2]
 
 
 @fixture
-def right_opened_vote_table(right_opened_vote: OpenedVote) -> OpenedVoteTable:
-    return [right_opened_vote, right_opened_vote]
+def right_opened_vote_table(right_opened_vote: OpenedVote, right_opened_vote_2: OpenedVote) -> OpenedVoteTable:
+    return [right_opened_vote, right_opened_vote_2]
 
 
 @fixture
@@ -36,8 +36,8 @@ def long_opened_vote_table(left_opened_vote: OpenedVote) -> OpenedVoteTable:
 
 
 @fixture
-def commitment_table(commitment: Commitment) -> CommitmentTable:
-    return [commitment, commitment]
+def commitment_table(commitment: Commitment, commitment_2: Commitment) -> CommitmentTable:
+    return [commitment, commitment_2]
 
 
 @fixture
@@ -91,3 +91,7 @@ def test_one_row_is_invalid(
     left_opened_vote_table: OpenedVoteTable, invalid_commitment_table: CommitmentTable
 ):
     assert audit_table(left_opened_vote_table, invalid_commitment_table) is False
+
+
+def test_empty_tables():
+    assert audit_table([], []) is True
