@@ -6,6 +6,7 @@ from auditor.audit_vote import (
     OpenedLeft,
     OpenedRight,
 )
+from auditor.audit_table import OpenedVoteTable, CommitmentTable
 
 
 @fixture
@@ -29,6 +30,7 @@ def right_opened_vote() -> OpenedVote:
         ),
     )
 
+
 @fixture
 def left_opened_vote_2() -> OpenedVote:
     return OpenedVote(
@@ -49,6 +51,7 @@ def right_opened_vote_2() -> OpenedVote:
             data="0-1",
         ),
     )
+
 
 @fixture
 def opened_vote() -> OpenedVote:
@@ -78,6 +81,7 @@ def commitment() -> Commitment:
         right="8b6c1b2fc99055bc3125ad885d961803982e1e29778514f48aae9f08e88f877a",
     )
 
+
 @fixture
 def commitment_2() -> Commitment:
     return Commitment(
@@ -103,3 +107,46 @@ def invalid_middle_commitment() -> Commitment:
         middle=0,
         right="8b6c1b2fc99055bc3125ad885d961803982e1e29778514f48aae9f08e88f877a",
     )
+
+
+@fixture
+def left_opened_vote_table(
+    left_opened_vote: OpenedVote, left_opened_vote_2: OpenedVote
+) -> OpenedVoteTable:
+    return [left_opened_vote, left_opened_vote_2]
+
+
+@fixture
+def right_opened_vote_table(
+    right_opened_vote: OpenedVote, right_opened_vote_2: OpenedVote
+) -> OpenedVoteTable:
+    return [right_opened_vote, right_opened_vote_2]
+
+
+@fixture
+def commitment_table(
+    commitment: Commitment, commitment_2: Commitment
+) -> CommitmentTable:
+    return [commitment, commitment_2]
+
+
+@fixture
+def all_opened_vote_table(opened_vote: OpenedVote) -> OpenedVoteTable:
+    return [opened_vote, opened_vote]
+
+
+@fixture
+def long_opened_vote_table(left_opened_vote: OpenedVote) -> OpenedVoteTable:
+    return [left_opened_vote, left_opened_vote, left_opened_vote]
+
+
+@fixture
+def long_commitment_table(commitment: Commitment) -> CommitmentTable:
+    return [commitment, commitment, commitment]
+
+
+@fixture
+def invalid_commitment_table(
+    commitment: Commitment, invalid_commitment: Commitment
+) -> CommitmentTable:
+    return [commitment, invalid_commitment]
