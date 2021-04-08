@@ -10,6 +10,9 @@ TallyTables = Dict[TableId, CommitmentTable]
 
 
 def audit_tables(opened_data: AuditTables, commitment_data: TallyTables) -> bool:
+    # check if there any tables to audit
+    if len(opened_data.keys()) == 0:
+        return False
     # check if opened data has the same keys as commitment data
     if set(opened_data.keys()) != set(commitment_data.keys()):
         return False
