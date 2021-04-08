@@ -15,6 +15,3 @@ BulletinBoard = Dict[str, BulletinBoardEntry]
 
 def audit_bb_table(bb: BulletinBoard, opened_vote_table: OpenedVoteTable) -> bool:
     return True
-
-
-
