@@ -10,6 +10,9 @@ CommitmentTable = List[Commitment]
 def audit_table(
     opened_votes_table: OpenedVoteTable, commitment_table: CommitmentTable
 ) -> bool:
+    if len(opened_votes_table) == 0:
+        return False
+
     if len(opened_votes_table) != len(commitment_table):
         return False
 

@@ -8,6 +8,10 @@ CommitmentData = Dict[str, CommitmentTable]
 
 
 def audit_tables(opened_data: OpenedData, commitment_data: CommitmentData) -> bool:
+    # check if there any tables to audit
+    if len(opened_data.keys()) == 0:
+        return False
+    
     # check if opened data has the same keys as commitment data
     if not set(opened_data.keys()) == set(commitment_data.keys()):
         return False
