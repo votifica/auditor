@@ -1,43 +1,7 @@
 from pytest import fixture, mark
 from pytest_lazyfixture import lazy_fixture
 
-from auditor.audit_table import OpenedVoteTable, CommitmentTable
 from auditor.audit_tables import audit_tables, TallyTables, AuditTables
-
-
-@fixture
-def opened_data(
-    left_opened_vote_table: OpenedVoteTable, right_opened_vote_table: OpenedVoteTable
-) -> AuditTables:
-    return {"1": left_opened_vote_table, "2": right_opened_vote_table}
-
-
-@fixture
-def invalid_opened_data_all_columns_opened(
-    all_opened_vote_table: OpenedVoteTable,
-) -> AuditTables:
-    return {"1": all_opened_vote_table, "2": all_opened_vote_table}
-
-
-@fixture
-def invalid_opened_data_one_table_longer(
-    left_opened_vote_table: OpenedVoteTable, long_opened_vote_table: OpenedVoteTable
-) -> AuditTables:
-    return {"1": left_opened_vote_table, "2": long_opened_vote_table}
-
-
-@fixture
-def invalid_opened_data_wrong_keys(
-    left_opened_vote_table: OpenedVoteTable, right_opened_vote_table: OpenedVoteTable
-) -> AuditTables:
-    return {"X": left_opened_vote_table, "2": right_opened_vote_table}
-
-
-@fixture
-def invalid_opened_data_missing_keys(
-    left_opened_vote_table: OpenedVoteTable,
-) -> AuditTables:
-    return {"1": left_opened_vote_table}
 
 
 def test_successful_audit(opened_data: AuditTables, commitment_data: TallyTables):
