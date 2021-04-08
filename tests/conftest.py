@@ -7,6 +7,7 @@ from auditor.audit_vote import (
     OpenedRight,
 )
 from auditor.audit_table import OpenedVoteTable, CommitmentTable
+from auditor.audit_tables import TallyTables
 
 
 @fixture
@@ -136,13 +137,17 @@ def all_opened_vote_table(opened_vote: OpenedVote) -> OpenedVoteTable:
 
 
 @fixture
-def long_opened_vote_table(left_opened_vote: OpenedVote) -> OpenedVoteTable:
-    return [left_opened_vote, left_opened_vote, left_opened_vote]
+def long_opened_vote_table(
+    left_opened_vote: OpenedVote, left_opened_vote_2: OpenedVote
+) -> OpenedVoteTable:
+    return [left_opened_vote, left_opened_vote_2, left_opened_vote_2]
 
 
 @fixture
-def long_commitment_table(commitment: Commitment) -> CommitmentTable:
-    return [commitment, commitment, commitment]
+def long_commitment_table(
+    commitment: Commitment, commitment_2: Commitment
+) -> CommitmentTable:
+    return [commitment, commitment_2, commitment_2]
 
 
 @fixture
@@ -150,3 +155,43 @@ def invalid_commitment_table(
     commitment: Commitment, invalid_commitment: Commitment
 ) -> CommitmentTable:
     return [commitment, invalid_commitment]
+
+
+@fixture
+def commitment_data(commitment_table: CommitmentTable) -> TallyTables:
+    return {"1": commitment_table, "2": commitment_table}
+
+
+@fixture
+def invalid_commitment_data_invalid_table(
+    commitment_table: CommitmentTable, invalid_commitment_table: CommitmentTable
+) -> TallyTables:
+    return {"1": commitment_table, "2": invalid_commitment_table}
+
+
+@fixture
+def invalid_commitment_data_one_table_longer(
+    commitment_table: CommitmentTable, long_commitment_table: CommitmentTable
+) -> TallyTables:
+    return {"1": commitment_table, "2": long_commitment_table}
+
+
+@fixture
+def invalid_commitment_data_wrong_keys(
+    commitment_table: CommitmentTable,
+) -> TallyTables:
+    return {"Y": commitment_table, "2": commitment_table}
+
+
+@fixture
+def invalid_commitment_data_missing_keys(
+    commitment_table: CommitmentTable,
+) -> TallyTables:
+    return {"1": commitment_table}
+
+
+@fixture
+def invalid_commitment_data_too_many_keys(
+    commitment_table: CommitmentTable,
+) -> TallyTables:
+    return {"1": commitment_table, "2": commitment_table, "3": commitment_table}
