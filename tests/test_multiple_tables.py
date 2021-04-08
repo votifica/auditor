@@ -9,77 +9,75 @@ from auditor.audit_tables import audit_tables, CommitmentData, OpenedData
 def opened_data(
     left_opened_vote_table: OpenedVoteTable, right_opened_vote_table: OpenedVoteTable
 ) -> OpenedData:
-    return dict([("1", left_opened_vote_table), ("2", right_opened_vote_table)])
+    return {"1": left_opened_vote_table, "2": right_opened_vote_table}
 
 
 @fixture
 def invalid_opened_data_all_columns_opened(
     all_opened_vote_table: OpenedVoteTable,
 ) -> OpenedData:
-    return dict([("1", all_opened_vote_table), ("2", all_opened_vote_table)])
+    return {"1": all_opened_vote_table, "2": all_opened_vote_table}
 
 
 @fixture
 def invalid_opened_data_one_table_longer(
     left_opened_vote_table: OpenedVoteTable, long_opened_vote_table: OpenedVoteTable
 ) -> OpenedData:
-    return dict([("1", left_opened_vote_table), ("2", long_opened_vote_table)])
+    return {"1": left_opened_vote_table, "2": long_opened_vote_table}
 
 
 @fixture
 def invalid_opened_data_wrong_keys(
     left_opened_vote_table: OpenedVoteTable, right_opened_vote_table: OpenedVoteTable
 ) -> OpenedData:
-    return dict([("X", left_opened_vote_table), ("2", right_opened_vote_table)])
+    return {"X": left_opened_vote_table, "2": right_opened_vote_table}
 
 
 @fixture
 def invalid_opened_data_missing_keys(
     left_opened_vote_table: OpenedVoteTable,
 ) -> OpenedData:
-    return dict([("1", left_opened_vote_table)])
+    return {"1": left_opened_vote_table}
 
 
 @fixture
 def commitment_data(commitment_table: CommitmentTable) -> CommitmentData:
-    return dict([("1", commitment_table), ("2", commitment_table)])
+    return {"1": commitment_table, "2": commitment_table}
 
 
 @fixture
 def invalid_commitment_data_invalid_table(
     commitment_table: CommitmentTable, invalid_commitment_table: CommitmentTable
 ) -> CommitmentData:
-    return dict([("1", commitment_table), ("2", invalid_commitment_table)])
+    return {"1": commitment_table, "2": invalid_commitment_table}
 
 
 @fixture
 def invalid_commitment_data_one_table_longer(
     commitment_table: CommitmentTable, long_commitment_table: CommitmentTable
 ) -> CommitmentData:
-    return dict([("1", commitment_table), ("2", long_commitment_table)])
+    return {"1": commitment_table, "2": long_commitment_table}
 
 
 @fixture
 def invalid_commitment_data_wrong_keys(
     commitment_table: CommitmentTable,
 ) -> CommitmentData:
-    return dict([("Y", commitment_table), ("2", commitment_table)])
+    return {"Y": commitment_table, "2": commitment_table}
 
 
 @fixture
 def invalid_commitment_data_missing_keys(
     commitment_table: CommitmentTable,
 ) -> CommitmentData:
-    return dict([("1", commitment_table)])
+    return {"1": commitment_table}
 
 
 @fixture
 def invalid_commitment_data_too_many_keys(
     commitment_table: CommitmentTable,
 ) -> CommitmentData:
-    return dict(
-        [("1", commitment_table), ("2", commitment_table), ("3", commitment_table)]
-    )
+    return {"1": commitment_table, "2": commitment_table, "3": commitment_table}
 
 
 def test_successful_audit(opened_data: OpenedData, commitment_data: CommitmentData):

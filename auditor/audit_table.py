@@ -1,4 +1,5 @@
 from typing import List
+from more_itertools import all_equal
 
 from auditor.audit_vote import Commitment, OpenedVote, audit_vote
 
@@ -14,7 +15,7 @@ def audit_table(
         return False
 
     # check if all votes has the same side opened
-    if len(set([bool(opened_vote.left) for opened_vote in opened_votes_table])) > 1:
+    if not all_equal(bool(opened_vote.left) for opened_vote in opened_votes_table):
         return False
 
     for opened_vote, commitment in zip(opened_votes_table, commitment_table):
