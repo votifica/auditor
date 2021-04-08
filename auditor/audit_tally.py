@@ -9,6 +9,16 @@ TallyResults = Dict[QuestionAnswerId, int]
 
 
 def audit_tables_tally(tally_results: TallyResults, opened_data: AuditTables) -> bool:
+    if not any(bool(opened_table[0].right) for opened_table in opened_data.values()):
+        return False
+
+    for opened_table in opened_data.values():
+        if opened_table[0].right is None:
+            continue
+
+        if not audit_right_column_tally(tally_results, opened_table):
+            return False
+
     return True
 
 
