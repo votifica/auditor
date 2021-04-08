@@ -199,34 +199,34 @@ def invalid_commitment_data_too_many_keys(
 
 @fixture
 def opened_data(
-        left_opened_vote_table: OpenedVoteTable, right_opened_vote_table: OpenedVoteTable
+    left_opened_vote_table: OpenedVoteTable, right_opened_vote_table: OpenedVoteTable
 ) -> AuditTables:
     return {"1": left_opened_vote_table, "2": right_opened_vote_table}
 
 
 @fixture
 def invalid_opened_data_all_columns_opened(
-        all_opened_vote_table: OpenedVoteTable,
+    all_opened_vote_table: OpenedVoteTable,
 ) -> AuditTables:
     return {"1": all_opened_vote_table, "2": all_opened_vote_table}
 
 
 @fixture
 def invalid_opened_data_one_table_longer(
-        left_opened_vote_table: OpenedVoteTable, long_opened_vote_table: OpenedVoteTable
+    left_opened_vote_table: OpenedVoteTable, long_opened_vote_table: OpenedVoteTable
 ) -> AuditTables:
     return {"1": left_opened_vote_table, "2": long_opened_vote_table}
 
 
 @fixture
 def invalid_opened_data_wrong_keys(
-        left_opened_vote_table: OpenedVoteTable, right_opened_vote_table: OpenedVoteTable
+    left_opened_vote_table: OpenedVoteTable, right_opened_vote_table: OpenedVoteTable
 ) -> AuditTables:
     return {"X": left_opened_vote_table, "2": right_opened_vote_table}
 
 
 @fixture
 def invalid_opened_data_missing_keys(
-        left_opened_vote_table: OpenedVoteTable,
+    left_opened_vote_table: OpenedVoteTable,
 ) -> AuditTables:
     return {"1": left_opened_vote_table}
