@@ -1,12 +1,16 @@
 import argparse
 import json
+import typer
 
 from auditor.audit_tables import audit_tables, AuditTables, TallyTables
 from auditor.audit_table import CommitmentTable, OpenedVoteTable
 from auditor.audit_vote import Commitment, OpenedVote, OpenedLeft, OpenedRight
+from auditor.audit_pre_election_row import PreElectionTable, PreElectionTables, PreElectionRow, audit_pre_election_tables
+from auditor.audit_bb import BulletinBoardEntry, BulletinBoard, audit_bb
+from auditor.audit_tally import TallyResults, audit_tables_tally
 
 
-def _load_tally(path) -> TallyTables:
+def _load_tally_data(path:str) -> TallyTables:
     with open(path) as f:
         tally = json.load(f)
 
@@ -26,7 +30,7 @@ def _load_tally(path) -> TallyTables:
     return commitment_tables
 
 
-def _load_opened_vote(opened_vote_json) -> OpenedVote:
+def _load_opened_vote(opened_vote_json: str) -> OpenedVote:
     left = None
     right = None
     middle = int(opened_vote_json["middle"])
@@ -43,7 +47,7 @@ def _load_opened_vote(opened_vote_json) -> OpenedVote:
     return OpenedVote(left=left, middle=middle, right=right)
 
 
-def _load_opened_data(path) -> AuditTables:
+def _load_opened_data(path: str) -> AuditTables:
     with open(path) as f:
         opened_data = json.load(f)
 
@@ -59,14 +63,73 @@ def _load_opened_data(path) -> AuditTables:
     return opened_tables
 
 
+def _load_pre_election(path: str) -> PreElectionTables:
+    with open(path) as f:
+        data = json.load(f)
+
+    commitment_tables = {}
+
+    for table_id in data:
+        commitment_table = [
+            PreElectionRow(
+                left=commitment["left"],
+                middle=commitment["middle"],
+                right=commitment["right"],
+            )
+            for commitment in data[table_id]
+        ]
+        commitment_tables[table_id] = commitment_table
+
+    return commitment_tables
+
+
+def _load_bb(path: str) -> BulletinBoard:
+    with open(path) as f:
+        data = json.load(f)
+
+    bb = {}
+
+    for vote_id in data:
+        bb_entry = BulletinBoardEntry(**data[vote_id])
+        bb[vote_id] = bb_entry
+
+    return bb
+
+
+def _load_tally(path: str) -> TallyResults:
+    with open(path) as f:
+        data = json.load(f)
+
+    return data
+
+
+def audit_elections(data_opened: str, data_pre_election: str, data_tally: str, bb: str, tally: str):
+    data_pre_election = _load_pre_election(data_pre_election)
+    data_tally = _load_tally_data(data_tally)
+
+    print("Auditing pre_election - data_tally...")
+    print("valid" if audit_pre_election_tables(data_pre_election, data_tally) else "not valid!")
+
+    del data_pre_election
+    data_opened = _load_opened_data(data_opened)
+
+    print("Auditing data_tally - data_opened...")
+    print("valid" if audit_tables(data_opened, data_tally) else "not valid")
+
+    del data_tally
+
+    bb = _load_bb(bb)
+
+    print("Auditing data_opened - bb...")
+    print("valid" if audit_bb(bb, data_opened) else "not valid")
+
+    del bb
+
+    tally = _load_tally(tally)
+
+    print("Auditing data_opened - tally...")
+    print("valid" if audit_tables_tally(tally, data_opened) else "not valid")
+
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Voting auditor.")
-    parser.add_argument("tally", type=str, help="audit_data-tally.json file path")
-    parser.add_argument("opened", type=str, help="audit_data-opened.json file path")
-
-    args = parser.parse_args()
-
-    tally = _load_tally(args.tally)
-    opened = _load_opened_data(args.opened)
-
-    print(f"Data {'is' if audit_tables(opened, tally) else 'is not'} valid")
+    typer.run(audit_elections)
