@@ -1,4 +1,5 @@
 from typing import List
+from more_itertools import all_equal
 
 from auditor.audit_vote import Commitment, OpenedVote, audit_vote
 
@@ -10,11 +11,14 @@ CommitmentTable = List[Commitment]
 def audit_table(
     opened_votes_table: OpenedVoteTable, commitment_table: CommitmentTable
 ) -> bool:
+    if len(opened_votes_table) == 0:
+        return False
+
     if len(opened_votes_table) != len(commitment_table):
         return False
 
-    side = "left" if opened_votes_table[0].left else "right"
-    if not all(getattr(vote, side) for vote in opened_votes_table):
+    # check if all votes has the same side opened
+    if not all_equal(bool(opened_vote.left) for opened_vote in opened_votes_table):
         return False
 
     for opened_vote, commitment in zip(opened_votes_table, commitment_table):

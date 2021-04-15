@@ -1,21 +1,8 @@
 from pytest import fixture, mark
 from pytest_lazyfixture import lazy_fixture
 
-from auditor.audit_vote import (
-    OpenedVote,
-    Commitment,
-)
+from auditor.audit_vote import OpenedVote
 from auditor.audit_table import audit_table, OpenedVoteTable, CommitmentTable
-
-
-@fixture
-def left_opened_vote_table(left_opened_vote: OpenedVote) -> OpenedVoteTable:
-    return [left_opened_vote, left_opened_vote]
-
-
-@fixture
-def right_opened_vote_table(right_opened_vote: OpenedVote) -> OpenedVoteTable:
-    return [right_opened_vote, right_opened_vote]
 
 
 @fixture
@@ -23,33 +10,6 @@ def mixed_opened_vote_table(
     left_opened_vote: OpenedVote, right_opened_vote: OpenedVote
 ) -> OpenedVoteTable:
     return [left_opened_vote, right_opened_vote]
-
-
-@fixture
-def all_opened_vote_table(opened_vote: OpenedVote) -> OpenedVoteTable:
-    return [opened_vote, opened_vote]
-
-
-@fixture
-def long_opened_vote_table(left_opened_vote: OpenedVote) -> OpenedVoteTable:
-    return [left_opened_vote, left_opened_vote, left_opened_vote, left_opened_vote]
-
-
-@fixture
-def commitment_table(commitment: Commitment) -> CommitmentTable:
-    return [commitment, commitment]
-
-
-@fixture
-def long_commitment_table(commitment: Commitment) -> CommitmentTable:
-    return [commitment, commitment, commitment]
-
-
-@fixture
-def invalid_commitment_table(
-    commitment: Commitment, invalid_commitment: Commitment
-) -> CommitmentTable:
-    return [commitment, invalid_commitment]
 
 
 @mark.parametrize(
@@ -91,3 +51,7 @@ def test_one_row_is_invalid(
     left_opened_vote_table: OpenedVoteTable, invalid_commitment_table: CommitmentTable
 ):
     assert audit_table(left_opened_vote_table, invalid_commitment_table) is False
+
+
+def test_empty_tables():
+    assert audit_table([], []) is False
