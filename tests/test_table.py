@@ -54,4 +54,4 @@ def test_one_row_is_invalid(
 
 
 def test_empty_tables():
-    assert audit_table([], []) is True
+    assert audit_table([], []) is False

@@ -129,4 +129,4 @@ def test_tables_of_different_len(
 
 
 def test_empty_data():
-    assert audit_tables(dict(), dict()) is True
+    assert audit_tables(dict(), dict()) is False
