@@ -45,7 +45,7 @@ def audit_right_column_bb(
         if opened_vote.right is None:
             return False
 
-        if opened_vote.middle == 1:
+        if opened_vote.middle == 1 or opened_vote.middle == -1:
             num_votes_table += 1
 
     for bb_entry in bb.values():
@@ -67,7 +67,7 @@ def audit_left_column_bb(bb: BulletinBoard, opened_vote_table: OpenedVoteTable) 
         if opened_vote.left is None:
             return False
 
-        if opened_vote.middle == 1:
+        if opened_vote.middle == 1 or opened_vote.middle == -1:
             table_votes.add(opened_vote.left.data)
 
     for bb_entry in bb.values():
