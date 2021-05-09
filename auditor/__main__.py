@@ -1,16 +1,21 @@
-import argparse
 import json
 import typer
 
 from auditor.audit_tables import audit_tables, AuditTables, TallyTables
-from auditor.audit_table import CommitmentTable, OpenedVoteTable
 from auditor.audit_vote import Commitment, OpenedVote, OpenedLeft, OpenedRight
-from auditor.audit_pre_election_row import PreElectionTable, PreElectionTables, PreElectionRow, audit_pre_election_tables
+from auditor.audit_pre_election_row import (
+    PreElectionTables,
+    PreElectionRow,
+    audit_pre_election_tables,
+)
 from auditor.audit_bb import BulletinBoardEntry, BulletinBoard, audit_bb
 from auditor.audit_tally import TallyResults, audit_tables_tally
 
 
-def _load_tally_data(path:str) -> TallyTables:
+app = typer.Typer()
+
+
+def _load_tally_data(path: str) -> TallyTables:
     with open(path) as f:
         tally = json.load(f)
 
@@ -103,12 +108,19 @@ def _load_tally(path: str) -> TallyResults:
     return data
 
 
-def audit_elections(data_opened: str, data_pre_election: str, data_tally: str, bb: str, tally: str):
+@app.command()
+def audit_elections(
+    data_opened: str, data_pre_election: str, data_tally: str, bb: str, tally_all: str
+):
     data_pre_election = _load_pre_election(data_pre_election)
     data_tally = _load_tally_data(data_tally)
 
     print("Auditing pre_election - data_tally...")
-    print("valid" if audit_pre_election_tables(data_pre_election, data_tally) else "not valid!")
+    print(
+        "valid"
+        if audit_pre_election_tables(data_pre_election, data_tally)
+        else "not valid!"
+    )
 
     del data_pre_election
     data_opened = _load_opened_data(data_opened)
@@ -125,11 +137,42 @@ def audit_elections(data_opened: str, data_pre_election: str, data_tally: str, b
 
     del bb
 
-    tally = _load_tally(tally)
+    tally_all = _load_tally(tally_all)
 
-    print("Auditing data_opened - tally...")
+    print("Auditing data_opened - tally with all votes...")
+    print("valid" if audit_tables_tally(tally_all, data_opened) else "not valid")
+
+
+@app.command()
+def audit_tally_all(data_opened: str, tally_all: str):
+    data_opened = _load_opened_data(data_opened)
+    tally = _load_tally(tally_all)
+
+    print("Auditing data_opened - tally with all votes...")
     print("valid" if audit_tables_tally(tally, data_opened) else "not valid")
 
 
+@app.command()
+def audit_tally_dummies(data_opened: str, tally_dummies: str):
+    data_opened = _load_opened_data(data_opened)
+    tally = _load_tally(tally_dummies)
+
+    print("Auditing data_opened - tally with dummy votes...")
+    print(
+        "valid" if audit_tables_tally(tally, data_opened, False, True) else "not valid"
+    )
+
+
+@app.command()
+def audit_tally_final(data_opened: str, tally_final: str):
+    data_opened = _load_opened_data(data_opened)
+    tally = _load_tally(tally_final)
+
+    print("Auditing data_opened - final tally...")
+    print(
+        "valid" if audit_tables_tally(tally, data_opened, True, False) else "not valid"
+    )
+
+
 if __name__ == "__main__":
-    typer.run(audit_elections)
+    app()
