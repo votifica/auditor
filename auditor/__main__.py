@@ -1,5 +1,6 @@
 import json
 import typer
+import click_spinner
 
 from auditor.audit_tables import audit_tables, AuditTables, TallyTables
 from auditor.audit_vote import Commitment, OpenedVote, OpenedLeft, OpenedRight
@@ -116,31 +117,36 @@ def audit_elections(
     data_tally = _load_tally_data(data_tally)
 
     print("Auditing pre_election - data_tally...")
-    print(
-        "valid"
-        if audit_pre_election_tables(data_pre_election, data_tally)
-        else "not valid!"
-    )
+    with click_spinner.spinner():
+        valid = audit_pre_election_tables(data_pre_election, data_tally)
+    print("valid" if valid else "not valid!")
 
     del data_pre_election
     data_opened = _load_opened_data(data_opened)
 
     print("Auditing data_tally - data_opened...")
-    print("valid" if audit_tables(data_opened, data_tally) else "not valid")
+    with click_spinner.spinner():
+        valid = audit_tables(data_opened, data_tally)
+
+    print("valid" if valid else "not valid")
 
     del data_tally
 
     bb = _load_bb(bb)
 
     print("Auditing data_opened - bb...")
-    print("valid" if audit_bb(bb, data_opened) else "not valid")
+    with click_spinner.spinner():
+        valid = audit_bb(bb, data_opened)
+    print("valid" if valid else "not valid")
 
     del bb
 
     tally_all = _load_tally(tally_all)
 
     print("Auditing data_opened - tally with all votes...")
-    print("valid" if audit_tables_tally(tally_all, data_opened) else "not valid")
+    with click_spinner.spinner():
+        valid = audit_tables_tally(tally_all, data_opened)
+    print("valid" if valid else "not valid")
 
 
 @app.command()
@@ -149,7 +155,9 @@ def audit_tally_all(data_opened: str, tally_all: str):
     tally = _load_tally(tally_all)
 
     print("Auditing data_opened - tally with all votes...")
-    print("valid" if audit_tables_tally(tally, data_opened) else "not valid")
+    with click_spinner.spinner():
+        valid = audit_tables_tally(tally, data_opened)
+    print("valid" if valid else "not valid")
 
 
 @app.command()
@@ -158,9 +166,9 @@ def audit_tally_dummies(data_opened: str, tally_dummies: str):
     tally = _load_tally(tally_dummies)
 
     print("Auditing data_opened - tally with dummy votes...")
-    print(
-        "valid" if audit_tables_tally(tally, data_opened, False, True) else "not valid"
-    )
+    with click_spinner.spinner():
+        valid = audit_tables_tally(tally, data_opened, False, True)
+    print("valid" if valid else "not valid")
 
 
 @app.command()
@@ -169,9 +177,9 @@ def audit_tally_final(data_opened: str, tally_final: str):
     tally = _load_tally(tally_final)
 
     print("Auditing data_opened - final tally...")
-    print(
-        "valid" if audit_tables_tally(tally, data_opened, True, False) else "not valid"
-    )
+    with click_spinner.spinner():
+        valid = audit_tables_tally(tally, data_opened, True, False)
+    print("valid" if valid else "not valid")
 
 
 if __name__ == "__main__":
