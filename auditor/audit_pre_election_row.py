@@ -47,7 +47,9 @@ def audit_pre_election_table(
         print("Tables have different length")
         return False
 
-    for i, (pre_election_row, commitment) in enumerate(zip(pre_election_table, commitment_table)):
+    for i, (pre_election_row, commitment) in enumerate(
+        zip(pre_election_table, commitment_table)
+    ):
         if not audit_pre_election_row(pre_election_row, commitment):
             print(f"Row {i} is not matching")
             return False

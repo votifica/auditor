@@ -24,7 +24,9 @@ def audit_table(
         print("Two columns opened")
         return False
 
-    for i, (opened_vote, commitment) in enumerate(zip(opened_votes_table, commitment_table)):
+    for i, (opened_vote, commitment) in enumerate(
+        zip(opened_votes_table, commitment_table)
+    ):
         if audit_vote(opened_vote, commitment) is False:
             print(f"Row {i} commitment is not validating!")
             return False

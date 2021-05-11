@@ -1,6 +1,7 @@
 import json
 import typer
 import click_spinner
+from typing import Optional
 
 from auditor.audit_tables import audit_tables, AuditTables, TallyTables
 from auditor.audit_vote import Commitment, OpenedVote, OpenedLeft, OpenedRight
@@ -98,7 +99,8 @@ def _load_bb(path: str) -> BulletinBoard:
     for vote_id in data:
         bb_entry = BulletinBoardEntry(
             cast_codes=data[vote_id]["cast_codes"],
-            vote_codes=data[vote_id]["vote_codes"]
+            vote_codes=data[vote_id]["vote_codes"],
+            group_id=data[vote_id].get("group_id") or data[vote_id].get("groupd_id")
         )
         bb[vote_id] = bb_entry
 
@@ -114,7 +116,12 @@ def _load_tally(path: str) -> TallyResults:
 
 @app.command()
 def audit_elections(
-    data_opened: str, data_pre_election: str, data_tally: str, bb: str, tally_all: str
+    data_opened: str,
+    data_pre_election: str,
+    data_tally: str,
+    bb: str,
+    tally_all: str,
+    group_id: Optional[str] = typer.Argument(None),
 ):
     data_pre_election = _load_pre_election(data_pre_election)
     data_tally = _load_tally_data(data_tally)
@@ -136,6 +143,16 @@ def audit_elections(
     del data_tally
 
     bb = _load_bb(bb)
+    if group_id is not None:
+        print(
+            f"Filtering bulletin board is enabled, only votes for group {group_id} will be taken into account"
+        )
+        bb_filtered = {}
+        for vote_id, bb_entry in bb.items():
+            if bb_entry.group_id == group_id:
+                bb_filtered[vote_id] = bb_entry
+
+        bb = bb_filtered
 
     print("Auditing data_opened - bb...")
     with click_spinner.spinner():

@@ -15,6 +15,7 @@ VoteId = str
 class BulletinBoardEntry:
     cast_codes: Dict[QuestionId, CastCode]
     vote_codes: Dict[QuestionId, List[VoteCode]]
+    group_id: str = None
 
 
 BulletinBoard = Dict[VoteId, BulletinBoardEntry]
