@@ -15,15 +15,17 @@ def audit_tables_tally(
     count_dummy_votes: bool = True,
 ) -> bool:
     if not any(bool(opened_table[0].right) for opened_table in opened_data.values()):
+        print("At least one table should have right column opened")
         return False
 
-    for opened_table in opened_data.values():
+    for key, opened_table in opened_data.items():
         if opened_table[0].right is None:
             continue
 
         if not audit_right_column_tally(
             tally_results, opened_table, count_normal_votes, count_dummy_votes
         ):
+            print(f"Tally validation fails for table {key} from opened_data")
             return False
 
     return True
@@ -37,8 +39,9 @@ def audit_right_column_tally(
 ) -> bool:
     results = {}
 
-    for opened_vote in opened_vote_table:
+    for i, opened_vote in enumerate(opened_vote_table):
         if opened_vote.right is None:
+            print(f"Row {i} doesn't have right column opened")
             return False
 
         if (count_normal_votes and opened_vote.middle == 1) or (
@@ -49,4 +52,8 @@ def audit_right_column_tally(
             else:
                 results[question_answer_id] += 1
 
-    return results == tally_results
+    if results != tally_results:
+        print(f"Tally results {tally_results} does not match table results {results}")
+        return False
+
+    return True
