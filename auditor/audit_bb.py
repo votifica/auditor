@@ -90,7 +90,7 @@ def audit_left_column_bb(bb: BulletinBoard, opened_vote_table: OpenedVoteTable) 
         return False
 
     if not bb_votes == table_votes:
-        print("Number of votes in the table don't match number of votes on bb")
+        print(f"Votes from tally {table_votes} doesn't match votes from bb {bb_votes}")
         return False
 
     return True
