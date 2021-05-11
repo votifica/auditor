@@ -96,7 +96,10 @@ def _load_bb(path: str) -> BulletinBoard:
     bb = {}
 
     for vote_id in data:
-        bb_entry = BulletinBoardEntry(**data[vote_id])
+        bb_entry = BulletinBoardEntry(
+            cast_codes=data[vote_id]["cast_codes"],
+            vote_codes=data[vote_id]["vote_codes"]
+        )
         bb[vote_id] = bb_entry
 
     return bb
